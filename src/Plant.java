@@ -4,6 +4,7 @@ public class Plant {
     private double currentAge;
     private double growthRate;
     private double sellPrice;
+    private boolean infected;
 
     public Plant(String species, int lifespan, double growthRate, double sellPrice) {
         this.species = species;
@@ -11,5 +12,6 @@ public class Plant {
         this.growthRate = growthRate;
         currentAge = 0;
         this.sellPrice = sellPrice;
+        this.infected = false;
     }
 }

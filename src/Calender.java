@@ -1,20 +1,34 @@
+import javax.swing.*;
+
 public class Calender {
     private int day;
     private int[] calDay; // Month / Day / Season
-    private final String[] MONTHS = {"January", "Febuary", "March", "April", "May", "June",
+    private final String[] MONTHS = {"January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"};
     private final String[] SEASONS = {"Winter", "Spring", "Summer", "Autumn"};
+    private DisplayPanel panel;
 
-    public Calender() {
+    public Calender(Frame frame) {
+        this.panel = frame.getPanel();
         day = 0;
         calDay = new int[3];
+        randomCalDay();
+    }
 
+    public int[] getCalDay() {
+        return calDay;
+    }
+
+    public void printDay() {
+        panel.addMessage("Today is day " + calDay[1] + " of the month of " + MONTHS[calDay[0]] + " of " + SEASONS[calDay[2]]);
     }
 
     public void adjustDay() {
         day++;
         calDay[1]++;
         checkCal();
+        calculateSeason();
+        printDay();
     }
 
     private void checkCal() {
