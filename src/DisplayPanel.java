@@ -8,33 +8,31 @@ import java.io.File;
 import java.io.IOException;
 
 public class DisplayPanel extends JPanel implements ActionListener {
+    private boolean menu = true;
     private String message;
-    private JButton button;
+    private JButton[] menuButtons = new JButton[5];
     private JButton submit;
-    private BufferedImage goomba;
+    private BufferedImage[] menuItems = new BufferedImage[5];
+    private BufferedImage farmland;
+    private BufferedImage forest;
+    private BufferedImage shop;
     private JTextField textField;
 
     public DisplayPanel() {
-        button = new JButton("Click me");
-        button.addActionListener(this);
-        add(button);
-
-        try {
-            goomba = ImageIO.read(new File("src\\goomba.png"));
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
+        menuButtons[0] = new JButton("To Farm!");
+        menuButtons[0].addActionListener(this);
+        add(menuButtons[0]);
+        menu();
         textField = new JTextField(10);
         add(textField);
 
-        submit = new JButton("SUBMIT");
-        submit.addActionListener(this);
-        add(submit);
+        menuButtons[1] = new JButton("To Forest!");
+        menuButtons[1].addActionListener(this);
+        add(menuButtons[1]);
     }
 
     public void addMessage(String message) {
-        this.message += message;
+        this.message = message;
     }
 
     @Override
@@ -43,10 +41,15 @@ public class DisplayPanel extends JPanel implements ActionListener {
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.setColor(Color.RED);
         g.drawString(message, 50, 30);
-        button.setLocation(50, 100);
-        g.drawImage(goomba, 200, 50, null);
+        if (menu) {
+            g.drawImage(menuItems[0], 100, 50, null);
+            g.drawImage(menuItems[1], 100, 300, null);
+            g.drawImage(menuItems[2], 500, 50, null);
+            g.drawImage(menuItems[3], 500, 300, null);
+            menuButtons[0].setLocation(100, 100);
+        }
+
         g.setColor(Color.BLACK);
-        g.drawString("goomba!", 200, 110);
         textField.setLocation(50, 60);
         submit.setLocation(50, 130);
     }
@@ -54,7 +57,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JButton) {
             JButton casted = (JButton) e.getSource();
-            if (casted == button) {
+            if (casted == menuButtons[0]) {
                 message = "CLICKED!";
                 repaint();
             }
@@ -68,6 +71,20 @@ public class DisplayPanel extends JPanel implements ActionListener {
 
                 // refresh the screen so that the updated message gets displayed
                 repaint();
+            }
+        }
+    }
+
+    private void menu() {
+        if (menu) {
+            try {
+                menuItems[0] = ImageIO.read(new File("src\\farmland.png"));
+                menuItems[1] = ImageIO.read(new File("src\\forest.jpg"));
+                menuItems[2] = ImageIO.read(new File("src\\shop.png"));
+                menuItems[3] = ImageIO.read(new File("src\\calendar.png"));
+                menuItems[4] = ImageIO.read(new File("src\\quit.png"));
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
