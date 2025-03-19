@@ -5,6 +5,7 @@ public class Plant {
     private double growthRate;
     private double sellPrice;
     private boolean infected;
+    private boolean soil;
 
     public Plant(String species, int lifespan, double growthRate, double sellPrice) {
         this.species = species;
@@ -13,5 +14,9 @@ public class Plant {
         currentAge = 0;
         this.sellPrice = sellPrice;
         this.infected = false;
+        if (species.equals("soil")) {
+            soil = true;
+        }
     }
+
 }
