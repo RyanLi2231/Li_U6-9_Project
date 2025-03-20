@@ -4,6 +4,7 @@ public class Logic {
     Scanner scan = new Scanner(System.in);
     Frame frame = new Frame();
     Calender calender = new Calender(frame);
+    DisplayPanel panel = frame.getPanel();
 
 
     public Logic() {
@@ -12,7 +13,7 @@ public class Logic {
 
     private void start() {
         calender.printDay();
-        System.out.println("Today, you have decided to start your ");
+        panel.addMessage("You have awakened in a farm");
         menu();
     }
 
