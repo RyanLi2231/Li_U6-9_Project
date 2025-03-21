@@ -6,10 +6,8 @@ public class Calender {
     private final String[] MONTHS = {"January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"};
     private final String[] SEASONS = {"Winter", "Spring", "Summer", "Autumn"};
-    private DisplayPanel panel;
 
-    public Calender(Frame frame) {
-        this.panel = frame.getPanel();
+    public Calender() {
         day = 0;
         calDay = new int[3];
         randomCalDay();
@@ -19,8 +17,8 @@ public class Calender {
         return calDay;
     }
 
-    public void printDay() {
-        panel.addMessage("Today is day " + calDay[1] + " of the month of " + MONTHS[calDay[0]] + " of " + SEASONS[calDay[2]]);
+    public String printDay() {
+        return ("Today is day " + calDay[1] + " of the month of " + MONTHS[calDay[0]] + " of " + SEASONS[calDay[2]]);
     }
 
     public void adjustDay() {

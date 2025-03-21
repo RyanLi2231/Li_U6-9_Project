@@ -11,9 +11,6 @@ public class Frame {
         panel = new DisplayPanel();
         frame.add(panel);
         frame.setVisible(true);
-    }
 
-    public DisplayPanel getPanel() {
-        return panel;
     }
 }

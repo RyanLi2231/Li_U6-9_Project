@@ -1,20 +1,9 @@
 import java.util.Scanner;
 
 public class Logic {
-    Scanner scan = new Scanner(System.in);
-    Frame frame = new Frame();
-    Calender calender = new Calender(frame);
-    DisplayPanel panel = frame.getPanel();
-
+    private Scanner scan = new Scanner(System.in);
 
     public Logic() {
-        start();
-    }
-
-    private void start() {
-        calender.printDay();
-        panel.addMessage("You have awakened in a farm");
-        menu();
     }
 
     private void menu() {
@@ -26,15 +15,6 @@ public class Logic {
             System.out.println("4. Next Day");
             System.out.println("5. End Game");
             input = scan.nextInt();
-            action(input);
-        }
-    }
-
-    private void action(int input) {
-        if (input == 3) {
-            calender.printDay();
-        } else if (input == 4) {
-            calender.adjustDay();
         }
     }
 }
