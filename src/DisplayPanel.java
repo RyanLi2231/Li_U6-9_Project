@@ -21,11 +21,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private String message = messages[0];
     private JButton[] defaultButtons = new JButton[5];
     private JButton[] menuButtons = new JButton[5];
-    private JButton submit;
     private BufferedImage[] menuItems = new BufferedImage[5];
-    private BufferedImage farmland;
-    private BufferedImage forest;
-    private BufferedImage shop;
     private JTextField textField;
     private Rectangle messageBox;
     private int[] messageBoxLocation;
@@ -45,13 +41,16 @@ public class DisplayPanel extends JPanel implements ActionListener {
         defaultButtons[2] = new JButton("Next Day");
         defaultButtons[2].addActionListener(this);
         add(defaultButtons[2]);
+        defaultButtons[3] = new JButton("Enter");
+        defaultButtons[3].addActionListener(this);
+        add(defaultButtons[3]);
         menuButtons[0] = new JButton("To Farm!");
         menuButtons[0].addActionListener(this);
         menuButtons[1] = new JButton("To Forest!");
         menuButtons[1].addActionListener(this);
         menuButtons[2] = new JButton("To Shop!");
         menuButtons[2].addActionListener(this);
-        menuButtons[3] = new JButton("Check Calendar");
+        menuButtons[3] = new JButton("Open Inventory");
         menuButtons[3].addActionListener(this);
         menu();
     }
@@ -75,15 +74,14 @@ public class DisplayPanel extends JPanel implements ActionListener {
             placeMenuStuff(g);
         }
         g.setColor(Color.BLACK);
-        textField.setLocation(50, 60);
-        textField.setVisible(false);
+        textField.setLocation(570, 30);
     }
 
     private void placeMenuStuff(Graphics g) {
         g.drawImage(menuItems[0], 200, 200, null);
         g.drawImage(menuItems[1], 200, 475, null);
         g.drawImage(menuItems[2], 600, 150, null);
-        g.drawImage(menuItems[3], 610, 500, null);
+        g.drawImage(menuItems[3], 630, 500, null);
         menuButtons[0].setLocation(300, 400);
         menuButtons[1].setLocation(300, 700);
         menuButtons[2].setLocation(675, 400);
@@ -118,6 +116,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
             }
             if (casted == menuButtons[0]) {
                 message = "You have arrived at your farm!";
+
                 repaint();
             }
             if (casted == menuButtons[1]) {
@@ -132,18 +131,6 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 message = "Opening inventory!";
                 repaint();
             }
-
-
-            if (casted == submit) {
-                // obtain string from text field
-                String enteredText = textField.getText();
-
-                // update message to the entered text
-                message = enteredText;
-
-                // refresh the screen so that the updated message gets displayed
-                repaint();
-            }
         }
     }
 
@@ -152,7 +139,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
             menuItems[0] = ImageIO.read(new File("src\\farmland.png"));
             menuItems[1] = ImageIO.read(new File("src\\forest.jpg"));
             menuItems[2] = ImageIO.read(new File("src\\shop.png"));
-            menuItems[3] = ImageIO.read(new File("src\\calendar.png"));
+            menuItems[3] = ImageIO.read(new File("src\\inventory.png"));
             menuItems[4] = ImageIO.read(new File("src\\quit.png"));
             add(menuButtons[0]);
             add(menuButtons[1]);
