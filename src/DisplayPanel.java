@@ -12,8 +12,9 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private Logic logic = new Logic();
     private Calender calender = new Calender();
     private Farm farm = new Farm();
+    private BufferedImage[][] farmLand = new BufferedImage[16][16];
     private boolean menu;
-    private boolean finishIntro;
+    private boolean finishMessage;
     private String[] messages = new String[]{"Today you have decided to start your farm!",
             "Your task is to make as much money as you can from farming.",
             "There will be no end and you will come across random events.",
@@ -70,6 +71,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
         defaultButtons[0].setLocation(1100, 50);
         defaultButtons[1].setLocation(messageBoxLocation[0] + 420, messageBoxLocation[1] + 70);
         defaultButtons[2].setLocation(1080, 80);
+        defaultButtons[3].setLocation(700, 20);
         if (menu) {
             placeMenuStuff(g);
         }
@@ -92,15 +94,16 @@ public class DisplayPanel extends JPanel implements ActionListener {
         if (e.getSource() instanceof JButton) {
             JButton casted = (JButton) e.getSource();
             if (casted == defaultButtons[0]) {
+                finishMessage = true;
                 menu = !menu;
                 menuButtonVisibility(menu);
                 repaint();
             }
             if (casted == defaultButtons[1]) {
-                if (messages[messages.length - 1].equals(message)) {
+                if (messages[messages.length - 1].equals(message) || finishMessage) {
                     message = "";
-                    finishIntro = true;
-                } else if (!finishIntro) {
+                    finishMessage = true;
+                } else if (!finishMessage) {
                     for (int i = 0; i < messages.length - 1; i++) {
                         if (this.message.equals(messages[i])) {
                             message = messages[i + 1];
@@ -134,6 +137,10 @@ public class DisplayPanel extends JPanel implements ActionListener {
         }
     }
 
+    private void enterFarm() {
+
+    }
+
     private void menu() {
         try {
             menuItems[0] = ImageIO.read(new File("src\\farmland.png"));
@@ -146,6 +153,19 @@ public class DisplayPanel extends JPanel implements ActionListener {
             add(menuButtons[2]);
             add(menuButtons[3]);
             menuButtonVisibility(menu);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void farm() {
+        try {
+            for (BufferedImage[] row : farmLand) {
+                for (BufferedImage land : row) {
+                    land
+                }
+            }
+            menuItems[0] = ImageIO.read(new File("src\\farmland.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
