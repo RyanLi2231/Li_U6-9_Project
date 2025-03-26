@@ -13,6 +13,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private Calender calender = new Calender();
     private Farm farm = new Farm();
     private BufferedImage[][] farmLand = new BufferedImage[16][16];
+    private boolean displayFarm;
     private boolean menu;
     private boolean finishMessage;
     private String[] messages = new String[]{"Today you have decided to start your farm!",
@@ -29,6 +30,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
 
 
     public DisplayPanel() {
+        farm();
         messageBox = new Rectangle(500, 100);
         messageBoxLocation = new int[]{50, 20};
         textField = new JTextField(10);
@@ -75,6 +77,9 @@ public class DisplayPanel extends JPanel implements ActionListener {
         if (menu) {
             placeMenuStuff(g);
         }
+        if (displayFarm) {
+            placeFarm(g);
+        }
         g.setColor(Color.BLACK);
         textField.setLocation(570, 30);
     }
@@ -88,6 +93,14 @@ public class DisplayPanel extends JPanel implements ActionListener {
         menuButtons[1].setLocation(300, 700);
         menuButtons[2].setLocation(675, 400);
         menuButtons[3].setLocation(655, 700);
+    }
+
+    private void placeFarm(Graphics g) {
+        for (int i = 0; i < farmLand[0].length; i++) {
+            for (int j = 0; j < farmLand.length; j++) {
+                g.drawImage(farmLand[i][j], i * 50 + 200, j * 50 + 200, 50, 50, null);
+            }
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -118,8 +131,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 repaint();
             }
             if (casted == menuButtons[0]) {
-                message = "You have arrived at your farm!";
-
+                enterFarm();
                 repaint();
             }
             if (casted == menuButtons[1]) {
@@ -138,7 +150,8 @@ public class DisplayPanel extends JPanel implements ActionListener {
     }
 
     private void enterFarm() {
-
+        message = "You have arrived at your farm!";
+        displayFarm = true;
     }
 
     private void menu() {
@@ -161,11 +174,11 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private void farm() {
         try {
             for (BufferedImage[] row : farmLand) {
-                for (BufferedImage land : row) {
-                    land
+                for (int i = 0; i < row.length; i++) {
+                    row[i] = ImageIO.read(new File("src\\soil.jpg"));
                 }
             }
-            menuItems[0] = ImageIO.read(new File("src\\farmland.png"));
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
