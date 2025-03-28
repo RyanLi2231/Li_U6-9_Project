@@ -74,17 +74,24 @@ public class DisplayPanel extends JPanel implements ActionListener {
         defaultButtons[1].setLocation(messageBoxLocation[0] + 420, messageBoxLocation[1] + 70);
         defaultButtons[2].setLocation(1080, 80);
         defaultButtons[3].setLocation(700, 20);
-        if (menu) {
-            placeMenuStuff(g);
-        }
         if (displayFarm) {
             placeFarm(g);
+        }
+        if (menu) {
+            placeMenuStuff(g);
         }
         g.setColor(Color.BLACK);
         textField.setLocation(570, 30);
     }
 
+    private void message() {
+
+    }
+
     private void placeMenuStuff(Graphics g) {
+        g.drawRoundRect(120, 120, 800, 700, 60, 60);
+        g.setColor(Color.darkGray);
+        g.fillRoundRect(120, 120, 800, 700, 60, 60);
         g.drawImage(menuItems[0], 200, 200, null);
         g.drawImage(menuItems[1], 200, 475, null);
         g.drawImage(menuItems[2], 600, 150, null);
@@ -96,15 +103,17 @@ public class DisplayPanel extends JPanel implements ActionListener {
     }
 
     private void placeFarm(Graphics g) {
+        g.drawRect(200, 150, 40 * 16 + 14, 40 * 16 + 14);
+        g.fillRect(200, 150, 40 * 16 + 14, 40 * 16 + 14);
         for (int i = 0; i < farmLand[0].length; i++) {
             for (int j = 0; j < farmLand.length; j++) {
-                g.drawImage(farmLand[i][j], i * 50 + 200, j * 50 + 200, 50, 50, null);
+                g.drawImage(farmLand[i][j], i * 41 + 200, j * 41 + 150, 40, 40, null);
             }
         }
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() instanceof JButton) {
+        if (e.getSource() instanceof JButton) { // Menu Button
             JButton casted = (JButton) e.getSource();
             if (casted == defaultButtons[0]) {
                 finishMessage = true;
@@ -112,7 +121,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 menuButtonVisibility(menu);
                 repaint();
             }
-            if (casted == defaultButtons[1]) {
+            if (casted == defaultButtons[1]) { // Enter Button
                 if (messages[messages.length - 1].equals(message) || finishMessage) {
                     message = "";
                     finishMessage = true;
@@ -130,7 +139,9 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 calender.adjustDay();
                 repaint();
             }
-            if (casted == menuButtons[0]) {
+            if (casted == menuButtons[0]) { // Farm
+                menu = false;
+                menuButtonVisibility(false);
                 enterFarm();
                 repaint();
             }
@@ -150,8 +161,10 @@ public class DisplayPanel extends JPanel implements ActionListener {
     }
 
     private void enterFarm() {
-        message = "You have arrived at your farm!";
-        displayFarm = true;
+        if (!displayFarm) {
+            message = "You have arrived at your farm!\nEnter the row you want to access";
+        }
+        displayFarm = !displayFarm;
     }
 
     private void menu() {
