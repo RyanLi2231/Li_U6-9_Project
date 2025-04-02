@@ -12,7 +12,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private Logic logic = new Logic();
     private Calender calender = new Calender();
     private Farm farm = new Farm();
-    private BufferedImage[][] farmLand = new BufferedImage[16][16];
+    private BufferedImage[] farmObjects = new BufferedImage[5];
     private boolean displayFarm;
     private boolean menu;
     private boolean finishMessage;
@@ -30,11 +30,12 @@ public class DisplayPanel extends JPanel implements ActionListener {
 
 
     public DisplayPanel() {
-        farm();
+        farmStuff();
         messageBox = new Rectangle(500, 100);
         messageBoxLocation = new int[]{50, 20};
         textField = new JTextField(10);
         add(textField);
+        textField.setVisible(false);
         defaultButtons[0] = new JButton("Menu");
         defaultButtons[0].addActionListener(this);
         add(defaultButtons[0]);
@@ -47,6 +48,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
         defaultButtons[3] = new JButton("Enter");
         defaultButtons[3].addActionListener(this);
         add(defaultButtons[3]);
+        defaultButtons[3].setVisible(false);
         menuButtons[0] = new JButton("To Farm!");
         menuButtons[0].addActionListener(this);
         menuButtons[1] = new JButton("To Forest!");
@@ -85,7 +87,6 @@ public class DisplayPanel extends JPanel implements ActionListener {
     }
 
     private void message() {
-
     }
 
     private void placeMenuStuff(Graphics g) {
@@ -105,11 +106,23 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private void placeFarm(Graphics g) {
         g.drawRect(200, 150, 40 * 16 + 14, 40 * 16 + 14);
         g.fillRect(200, 150, 40 * 16 + 14, 40 * 16 + 14);
-        for (int i = 0; i < farmLand[0].length; i++) {
-            for (int j = 0; j < farmLand.length; j++) {
-                g.drawImage(farmLand[i][j], i * 41 + 200, j * 41 + 150, 40, 40, null);
+        for (int i = 0; i < farm.getGrid()[0].length; i++) {
+            for (int j = 0; j < farm.getGrid().length; j++) {
+                Plant plant = farm.getGrid()[i][j];
+                g.drawImage(farmObjects[0], i * 41 + 200, j * 41 + 150, 40, 40, null);
+                if (plant instanceof Tree) {
+                    g.drawImage(farmObjects[1], i * 41 + 200, j * 41 + 150, 40, 40, null);
+                } else if (plant instanceof Shrub) {
+                    g.drawImage(farmObjects[2], i * 41 + 200, j * 41 + 150, 40, 40, null);
+                } else if (plant instanceof Root) {
+                    g.drawImage(farmObjects[3], i * 41 + 200, j * 41 + 150, 40, 40, null);
+                } else if (plant instanceof Rock) {
+                    g.drawImage(farmObjects[4], i * 41 + 200, j * 41 + 150, 40, 40, null);
+                }
             }
         }
+        textField.setVisible(true);
+        defaultButtons[3].setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -139,6 +152,24 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 calender.adjustDay();
                 repaint();
             }
+            if (casted == defaultButtons[3]) {
+                String enteredText = textField.getText();
+                try {
+                    String[] text = enteredText.split(" ");
+                    if (text.length > 1 && Integer.parseInt(text[0]) <= 16 && Integer.parseInt(text[0]) > 0 && Integer.parseInt(text[1]) <= 16 && Integer.parseInt(text[1]) > 0) {
+                        printStats(Integer.parseInt(text[0]), Integer.parseInt(text[1]));
+                    } else {
+                        finishMessage = false;
+                        messages = new String[]{"Invalid format", "Enter the row and column you want to access", "Ex: 5 8"};
+                        message = "Invalid format";
+                    }
+                } catch (NumberFormatException ex) {
+                    finishMessage = false;
+                    messages = new String[]{"Invalid format", "Enter the row and column you want to access", "Ex: 5 8"};
+                    message = "Invalid format";
+                }
+                repaint();
+            }
             if (casted == menuButtons[0]) { // Farm
                 menu = false;
                 menuButtonVisibility(false);
@@ -162,7 +193,9 @@ public class DisplayPanel extends JPanel implements ActionListener {
 
     private void enterFarm() {
         if (!displayFarm) {
-            message = "You have arrived at your farm!\nEnter the row you want to access";
+            finishMessage = false;
+            messages = new String[]{"You have arrived at your farm!", "Enter the row and column you want to access", "Ex: 5 8"};
+            message = "You have arrived at your farm!";
         }
         displayFarm = !displayFarm;
     }
@@ -184,14 +217,13 @@ public class DisplayPanel extends JPanel implements ActionListener {
         }
     }
 
-    private void farm() {
+    private void farmStuff() {
         try {
-            for (BufferedImage[] row : farmLand) {
-                for (int i = 0; i < row.length; i++) {
-                    row[i] = ImageIO.read(new File("src\\soil.jpg"));
-                }
-            }
-
+            farmObjects[0] = ImageIO.read(new File("src\\soil.jpg"));  // Soil
+            farmObjects[1] = ImageIO.read(new File("src\\tree.png")); // Tree
+            farmObjects[2] = ImageIO.read(new File("src\\bush.png")); // Bush
+            farmObjects[3] = ImageIO.read(new File("src\\root.png")); // Root
+            farmObjects[4] = ImageIO.read(new File("src\\rock.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -205,5 +237,9 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 break;
             }
         }
+    }
+
+    private void printStats(int row, int column) {
+
     }
 }

@@ -8,7 +8,7 @@ public class Plant {
     private boolean soil;
 
     public Plant(String species, int lifespan, double growthRate, double sellPrice) {
-        this.species = species;
+        this.species = "soil";
         this.lifespan = lifespan;
         this.growthRate = growthRate;
         currentAge = 0;
