@@ -16,6 +16,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private boolean displayFarm;
     private boolean menu;
     private boolean finishMessage;
+    private boolean stats;
     private String[] messages = new String[]{"Today you have decided to start your farm!",
             "Your task is to make as much money as you can from farming.",
             "There will be no end and you will come across random events.",
@@ -27,6 +28,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private JTextField textField;
     private Rectangle messageBox;
     private int[] messageBoxLocation;
+    private int[] currentStats = new int[2];
 
 
     public DisplayPanel() {
@@ -110,6 +112,12 @@ public class DisplayPanel extends JPanel implements ActionListener {
             for (int j = 0; j < farm.getGrid().length; j++) {
                 Plant plant = farm.getGrid()[i][j];
                 g.drawImage(farmObjects[0], i * 41 + 200, j * 41 + 150, 40, 40, null);
+                if (i == 0) {
+                    g.drawString(j + 1 + "", 180, j * 41 + 175);
+                }
+                if (j == 0) {
+                    g.drawString(i + 1 + "", i * 41 + 215, 140);
+                }
                 if (plant instanceof Tree) {
                     g.drawImage(farmObjects[1], i * 41 + 200, j * 41 + 150, 40, 40, null);
                 } else if (plant instanceof Shrub) {
@@ -123,6 +131,11 @@ public class DisplayPanel extends JPanel implements ActionListener {
         }
         textField.setVisible(true);
         defaultButtons[3].setVisible(true);
+        if (stats) {
+            if (!farm.getGrid()[currentStats[0]][currentStats[1]].printStats(g)) {
+                message = "No plant there";
+            }
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -157,7 +170,9 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 try {
                     String[] text = enteredText.split(" ");
                     if (text.length > 1 && Integer.parseInt(text[0]) <= 16 && Integer.parseInt(text[0]) > 0 && Integer.parseInt(text[1]) <= 16 && Integer.parseInt(text[1]) > 0) {
-                        printStats(Integer.parseInt(text[0]), Integer.parseInt(text[1]));
+                        currentStats[1] = Integer.parseInt(text[0]) - 1;
+                        currentStats[0] = Integer.parseInt(text[1]) - 1;
+                        stats = true;
                     } else {
                         finishMessage = false;
                         messages = new String[]{"Invalid format", "Enter the row and column you want to access", "Ex: 5 8"};
@@ -177,7 +192,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 repaint();
             }
             if (casted == menuButtons[1]) {
-                message = "You have entered the forest!";
+                message = "WIP";
                 repaint();
             }
             if (casted == menuButtons[2]) {
@@ -237,9 +252,5 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 break;
             }
         }
-    }
-
-    private void printStats(int row, int column) {
-
     }
 }

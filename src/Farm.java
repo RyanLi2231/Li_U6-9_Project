@@ -8,6 +8,8 @@ public class Farm {
                 int random = (int) (Math.random() * 5);
                 if (random == 0) {
                     row[i] = new Rock();
+                } else {
+                    row[i] = new Plant("soil", -1, -1, -1);
                 }
             }
         }
