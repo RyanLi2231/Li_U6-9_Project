@@ -8,6 +8,7 @@ public class Plant {
     private double sellPrice;
     private boolean infected;
     private boolean soil;
+    private boolean watered;
 
     public Plant(String species, int lifespan, double growthRate, double sellPrice) {
         this.species = species;
@@ -26,11 +27,15 @@ public class Plant {
             return false;
         }
         int x = 1000;
-        int y = 100;
+        int y = 200;
+        g.setColor(Color.darkGray);
+        g.fillRoundRect(x - 10, y - 20, 150, 160, 10, 10);
+        g.setColor(Color.white);
         g.drawString("Species: " + species, x, y);
         g.drawString("Lifespan: " + lifespan + " days", x, y + 20);
         g.drawString("Age: " + currentAge + " days", x, y + 40);
         g.drawString("Infected: " + infected, x, y + 60);
+        g.setColor(Color.black);
         return true;
     }
 }

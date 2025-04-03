@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class DisplayPanel extends JPanel implements ActionListener {
     private Logic logic = new Logic();
@@ -29,6 +31,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private Rectangle messageBox;
     private int[] messageBoxLocation;
     private int[] currentStats = new int[2];
+    private Player player = new Player();
 
 
     public DisplayPanel() {
@@ -72,7 +75,6 @@ public class DisplayPanel extends JPanel implements ActionListener {
         g2d.draw(messageBox);
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.setColor(Color.BLACK);
-        g.drawString(message, messageBoxLocation[0] + 10, messageBoxLocation[1] + 20);
         g.drawString(calender.printDay(), 800, 20);
         defaultButtons[0].setLocation(1100, 50);
         defaultButtons[1].setLocation(messageBoxLocation[0] + 420, messageBoxLocation[1] + 70);
@@ -86,9 +88,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
         }
         g.setColor(Color.BLACK);
         textField.setLocation(570, 30);
-    }
-
-    private void message() {
+        g.drawString(message, messageBoxLocation[0] + 10, messageBoxLocation[1] + 20);
     }
 
     private void placeMenuStuff(Graphics g) {
@@ -134,6 +134,11 @@ public class DisplayPanel extends JPanel implements ActionListener {
         if (stats) {
             if (!farm.getGrid()[currentStats[0]][currentStats[1]].printStats(g)) {
                 message = "No plant there";
+            } else {
+                if (!Arrays.equals(messages, new String[]{"Type 'disinfect' to disinfect", "Type 'water' to water"})) {
+                    messages = new String[]{"Type 'disinfect' to disinfect", "Type 'water' to water"};
+                    message = "Type 'disinfect' to disinfect";
+                }
             }
         }
     }
@@ -166,7 +171,21 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 repaint();
             }
             if (casted == defaultButtons[3]) {
-                String enteredText = textField.getText();
+                String enteredText = textField.getText().toLowerCase();
+                if (stats) {
+                    if (enteredText.equals("disinfect")) {
+                        if (player.hasItem("disinfectant")) {
+                            message = "Has disinfectant!";
+                        } else {
+                            message = "No disinfectant in inventory, buy some in shop";
+                        }
+                    } else if (enteredText.equals("water")) {
+
+                    }
+                    finishMessage = true;
+                    repaint();
+                    return;
+                }
                 try {
                     String[] text = enteredText.split(" ");
                     if (text.length > 1 && Integer.parseInt(text[0]) <= 16 && Integer.parseInt(text[0]) > 0 && Integer.parseInt(text[1]) <= 16 && Integer.parseInt(text[1]) > 0) {
