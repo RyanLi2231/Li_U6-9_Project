@@ -34,14 +34,34 @@ public class Farm {
                 } else if (plant instanceof Shrub) {
                     grid[row][column] = new Shrub(plant.getSpecies(), plant.getLifespan(), plant.getSellPrice(), plant.getHarvestCount(), ((Shrub) plant).getBerry());
                 }
-
-                System.out.println("worked");
                 return true;
             }
         }
         return false;
     }
 
+    public void nextDay() {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                Plant plant = grid[i][j];
+                plant.calculateHarvestTime();
+                if (!plant.getSpecies().equals("soil") && !plant.getSpecies().equals("rock")) {
+                    if (plant.getCurrentAge() >= plant.getLifespan()) {
+                        grid[i][j] = new Plant("soil", -1, -1, -1);
+                    }
+                    if (plant.isWatered()) {
+                        plant.addCurrentAge();
+                        plant.setWilted(false);
+                        plant.setWatered(false);
+                    } else if (plant.isWilted()) {
+                        grid[i][j] = new Plant("soil", -1, -1, -1);
+                    } else {
+                        plant.setWilted(true);
+                    }
+                }
+            }
+        }
+    }
     public void printPlants(Graphics g) {
         int x = 900;
         int y = 300;

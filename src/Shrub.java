@@ -9,4 +9,9 @@ public class Shrub extends Plant {
     public String getBerry() {
         return berry;
     }
+
+    @Override
+    public String printHarvest() {
+        return "Harvested " + getHarvestCount() + " " + berry + " for " + harvest() + " coins";
+    }
 }

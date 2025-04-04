@@ -1,13 +1,13 @@
 public class Player {
-    private int coins;
-    private String[][] inventory = new String[3][2];
+    private double coins;
+    private String[][] inventory;
 
     public Player() {
         coins = 10;
         inventory = new String[][]{{"Shovel", 0 + ""}, {"Pickaxe", 1 + ""}, {"Disinfectant", 0 + ""}};
     }
 
-    public int getCoins() {
+    public double getCoins() {
         return coins;
     }
 
@@ -15,7 +15,7 @@ public class Player {
         return inventory;
     }
 
-    public void addCoins(int coins) {
+    public void addCoins(double coins) {
         this.coins += coins;
     }
 

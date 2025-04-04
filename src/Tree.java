@@ -9,4 +9,9 @@ public class Tree extends Plant {
     public String getFruit() {
         return fruit;
     }
+
+    @Override
+    public String printHarvest() {
+        return "Harvested " + getHarvestCount() + " " + fruit + " for " + harvest() + " coins";
+    }
 }

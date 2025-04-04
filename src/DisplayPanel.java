@@ -22,7 +22,9 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private boolean plantPlant;
     private String[] messages = new String[]{"Today you have decided to start your farm!",
             "Your task is to make as much money as you can from farming.",
-            "There will be no end and you will come across random events.",
+            "Each plant costs 4 coins to plant",
+            "Plants can be infected and uses disinfectant to cure",
+            "Water your plants everyday",
             "Good luck!"};
     private String message = messages[0];
     private JButton[] defaultButtons = new JButton[5];
@@ -90,6 +92,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
         g.setColor(Color.BLACK);
         textField.setLocation(570, 30);
         g.drawString(message, messageBoxLocation[0] + 10, messageBoxLocation[1] + 20);
+        g.drawString("Coins: " + player.getCoins(), 800, 50);
     }
 
     private void placeMenuStuff(Graphics g) {
@@ -166,7 +169,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
             if (casted == defaultButtons[1]) { // Next Button
                 if (messages[messages.length - 1].equals(message) || finishMessage) {
                     message = "";
-                    finishMessage = true;
+                    finishMessage = false;
                 } else if (!finishMessage) {
                     for (int i = 0; i < messages.length - 1; i++) {
                         if (this.message.equals(messages[i])) {
@@ -179,15 +182,19 @@ public class DisplayPanel extends JPanel implements ActionListener {
             }
             if (casted == defaultButtons[2]) {
                 calender.adjustDay();
+                farm.nextDay();
                 repaint();
             }
             if (casted == defaultButtons[3]) { // Enter Button
                 String enteredText = textField.getText().toLowerCase();
                 if (plantPlant) {
-                    if (farm.processAnswer(enteredText, currentStats[0], currentStats[1]) && player.getCoins() >= 4) {
+                    if (player.getCoins() >= 4 && farm.processAnswer(enteredText, currentStats[0], currentStats[1])) {
                         player.addCoins(-4);
+                        message = "Plant planted!";
+                    } else {
+                        message = "Not enough coins!";
                     }
-                    message = "Plant planted!";
+
                     finishMessage = true;
                     stats = false;
                     plantPlant = false;
@@ -195,11 +202,12 @@ public class DisplayPanel extends JPanel implements ActionListener {
                     return;
                 }
                 if (stats) {
+                    Plant plant = farm.getGrid()[currentStats[0]][currentStats[1]];
                     if (enteredText.equals("disinfect")) {
-                        if (farm.getGrid()[currentStats[0]][currentStats[1]].isInfected() && player.hasItem("disinfectant")) {
+                        if (plant.isInfected() && player.hasItem("disinfectant")) {
                             message = "Disinfected plant!";
-                            farm.getGrid()[currentStats[0]][currentStats[1]].setInfected(false);
-                        } else if (!farm.getGrid()[currentStats[0]][currentStats[1]].isInfected()){
+                            plant.setInfected(false);
+                        } else if (!plant.isInfected()){
                             message = "Plant is not infected";
                         } else {
                             message = "No disinfectant in inventory, buy some in shop";
@@ -209,8 +217,17 @@ public class DisplayPanel extends JPanel implements ActionListener {
                         return;
                     } else if (enteredText.equals("water")) {
                         message = "Watered Plant!";
-                        farm.getGrid()[currentStats[0]][currentStats[1]].setWatered(true);
+                        plant.setWatered(true);
                         finishMessage = true;
+                        repaint();
+                        return;
+                    } else if (enteredText.equals("harvest")) {
+                        if (plant.isHarvestable()) {
+                            message = plant.printHarvest();
+                            System.out.println("ran");
+                            player.addCoins(plant.harvest());
+                            plant.setHarvestable(false);
+                        }
                         repaint();
                         return;
                     }
