@@ -1,6 +1,12 @@
 public class Shrub extends Plant {
+    String berry;
 
-    public Shrub(String species, int lifespan, double growthRate, double sellPrice) {
-        super(species, lifespan, growthRate, sellPrice);
+    public Shrub(String species, int lifespan, double sellPrice, int harvestCount, String berry) {
+        super(species, lifespan, sellPrice, harvestCount);
+        this.berry = berry;
+    }
+
+    public String getBerry() {
+        return berry;
     }
 }

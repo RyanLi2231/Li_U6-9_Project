@@ -19,6 +19,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private boolean menu;
     private boolean finishMessage;
     private boolean stats;
+    private boolean plantPlant;
     private String[] messages = new String[]{"Today you have decided to start your farm!",
             "Your task is to make as much money as you can from farming.",
             "There will be no end and you will come across random events.",
@@ -106,6 +107,26 @@ public class DisplayPanel extends JPanel implements ActionListener {
     }
 
     private void placeFarm(Graphics g) {
+        if (stats) {
+            if (farm.getGrid()[currentStats[0]][currentStats[1]].printStats(g).equals("soil")) {
+                farm.printPlants(g);
+                message = "Type the plant you want to plant";
+                plantPlant = true;
+            } else if (farm.getGrid()[currentStats[0]][currentStats[1]].printStats(g).equals("rock")) {
+                if (player.hasItem("pickaxe")) {
+                    farm.getGrid()[currentStats[0]][currentStats[1]] = new Plant("soil", -1, -1, -1);
+                    message = "Mined, used pickaxe";
+                } else {
+                    message = "Need a pickaxe";
+                }
+                finishMessage = true;
+            }else {
+                if (!Arrays.equals(messages, new String[]{"Type harvest to harvest", "Type 'disinfect' to disinfect", "Type 'water' to water"})) {
+                    messages = new String[]{"Type harvest to harvest", "Type 'disinfect' to disinfect", "Type 'water' to water"};
+                    message = "Type harvest to harvest";
+                }
+            }
+        }
         g.drawRect(200, 150, 40 * 16 + 14, 40 * 16 + 14);
         g.fillRect(200, 150, 40 * 16 + 14, 40 * 16 + 14);
         for (int i = 0; i < farm.getGrid()[0].length; i++) {
@@ -124,31 +145,13 @@ public class DisplayPanel extends JPanel implements ActionListener {
                     g.drawImage(farmObjects[2], i * 41 + 200, j * 41 + 150, 40, 40, null);
                 } else if (plant instanceof Root) {
                     g.drawImage(farmObjects[3], i * 41 + 200, j * 41 + 150, 40, 40, null);
-                } else if (plant instanceof Rock) {
+                } else if (plant.getSpecies().equals("rock")) {
                     g.drawImage(farmObjects[4], i * 41 + 200, j * 41 + 150, 40, 40, null);
                 }
             }
         }
         textField.setVisible(true);
         defaultButtons[3].setVisible(true);
-        if (stats) {
-            if (farm.getGrid()[currentStats[0]][currentStats[1]].printStats(g).equals("soil")) {
-                message = "No plant there";
-            } else if (farm.getGrid()[currentStats[0]][currentStats[1]].printStats(g).equals("rock")) {
-                if (player.hasItem("pickaxe")) {
-                    farm.getGrid()[currentStats[0]][currentStats[1]] = new Plant("soil", -1, -1, -1);
-                    message = "Mined";
-                } else {
-                    message = "Need a pickaxe";
-                }
-                finishMessage = true;
-            }else {
-                if (!Arrays.equals(messages, new String[]{"Type 'disinfect' to disinfect", "Type 'water' to water"})) {
-                    messages = new String[]{"Type 'disinfect' to disinfect", "Type 'water' to water"};
-                    message = "Type 'disinfect' to disinfect";
-                }
-            }
-        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -160,7 +163,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 menuButtonVisibility(menu);
                 repaint();
             }
-            if (casted == defaultButtons[1]) { // Enter Button
+            if (casted == defaultButtons[1]) { // Next Button
                 if (messages[messages.length - 1].equals(message) || finishMessage) {
                     message = "";
                     finishMessage = true;
@@ -178,12 +181,26 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 calender.adjustDay();
                 repaint();
             }
-            if (casted == defaultButtons[3]) {
+            if (casted == defaultButtons[3]) { // Enter Button
                 String enteredText = textField.getText().toLowerCase();
+                if (plantPlant) {
+                    if (farm.processAnswer(enteredText, currentStats[0], currentStats[1]) && player.getCoins() >= 4) {
+                        player.addCoins(-4);
+                    }
+                    message = "Plant planted!";
+                    finishMessage = true;
+                    stats = false;
+                    plantPlant = false;
+                    repaint();
+                    return;
+                }
                 if (stats) {
                     if (enteredText.equals("disinfect")) {
-                        if (player.hasItem("disinfectant")) {
+                        if (farm.getGrid()[currentStats[0]][currentStats[1]].isInfected() && player.hasItem("disinfectant")) {
                             message = "Disinfected plant!";
+                            farm.getGrid()[currentStats[0]][currentStats[1]].setInfected(false);
+                        } else if (!farm.getGrid()[currentStats[0]][currentStats[1]].isInfected()){
+                            message = "Plant is not infected";
                         } else {
                             message = "No disinfectant in inventory, buy some in shop";
                         }
@@ -191,6 +208,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
                         repaint();
                         return;
                     } else if (enteredText.equals("water")) {
+                        message = "Watered Plant!";
                         farm.getGrid()[currentStats[0]][currentStats[1]].setWatered(true);
                         finishMessage = true;
                         repaint();

@@ -3,8 +3,8 @@ public class Player {
     private String[][] inventory = new String[3][2];
 
     public Player() {
-        coins = 0;
-        inventory = new String[][]{{"Shovel", 0 + ""}, {"Pickaxe", 0 + ""}, {"Disinfectant", 1 + ""}};
+        coins = 10;
+        inventory = new String[][]{{"Shovel", 0 + ""}, {"Pickaxe", 1 + ""}, {"Disinfectant", 0 + ""}};
     }
 
     public int getCoins() {
