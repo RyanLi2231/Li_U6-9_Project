@@ -132,9 +132,17 @@ public class DisplayPanel extends JPanel implements ActionListener {
         textField.setVisible(true);
         defaultButtons[3].setVisible(true);
         if (stats) {
-            if (!farm.getGrid()[currentStats[0]][currentStats[1]].printStats(g)) {
+            if (farm.getGrid()[currentStats[0]][currentStats[1]].printStats(g).equals("soil")) {
                 message = "No plant there";
-            } else {
+            } else if (farm.getGrid()[currentStats[0]][currentStats[1]].printStats(g).equals("rock")) {
+                if (player.hasItem("pickaxe")) {
+                    farm.getGrid()[currentStats[0]][currentStats[1]] = new Plant("soil", -1, -1, -1);
+                    message = "Mined";
+                } else {
+                    message = "Need a pickaxe";
+                }
+                finishMessage = true;
+            }else {
                 if (!Arrays.equals(messages, new String[]{"Type 'disinfect' to disinfect", "Type 'water' to water"})) {
                     messages = new String[]{"Type 'disinfect' to disinfect", "Type 'water' to water"};
                     message = "Type 'disinfect' to disinfect";
@@ -175,16 +183,19 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 if (stats) {
                     if (enteredText.equals("disinfect")) {
                         if (player.hasItem("disinfectant")) {
-                            message = "Has disinfectant!";
+                            message = "Disinfected plant!";
                         } else {
                             message = "No disinfectant in inventory, buy some in shop";
                         }
+                        finishMessage = true;
+                        repaint();
+                        return;
                     } else if (enteredText.equals("water")) {
-
+                        farm.getGrid()[currentStats[0]][currentStats[1]].setWatered(true);
+                        finishMessage = true;
+                        repaint();
+                        return;
                     }
-                    finishMessage = true;
-                    repaint();
-                    return;
                 }
                 try {
                     String[] text = enteredText.split(" ");
@@ -193,11 +204,13 @@ public class DisplayPanel extends JPanel implements ActionListener {
                         currentStats[0] = Integer.parseInt(text[1]) - 1;
                         stats = true;
                     } else {
+                        stats = false;
                         finishMessage = false;
                         messages = new String[]{"Invalid format", "Enter the row and column you want to access", "Ex: 5 8"};
                         message = "Invalid format";
                     }
                 } catch (NumberFormatException ex) {
+                    stats = false;
                     finishMessage = false;
                     messages = new String[]{"Invalid format", "Enter the row and column you want to access", "Ex: 5 8"};
                     message = "Invalid format";
@@ -207,6 +220,8 @@ public class DisplayPanel extends JPanel implements ActionListener {
             if (casted == menuButtons[0]) { // Farm
                 menu = false;
                 menuButtonVisibility(false);
+                stats = false;
+                message = "";
                 enterFarm();
                 repaint();
             }

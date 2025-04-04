@@ -22,6 +22,7 @@ public class Player {
     public boolean hasItem(String target) {
         for (String[] item : inventory) {
             if (item[0].toLowerCase().equals(target) && Integer.parseInt(item[1]) > 0) {
+                item[1] = Integer.parseInt(item[1]) - 1 + "";
                 return true;
             }
         }

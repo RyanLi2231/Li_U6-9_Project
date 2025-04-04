@@ -9,6 +9,7 @@ public class Plant {
     private boolean infected;
     private boolean soil;
     private boolean watered;
+    private boolean wilted;
 
     public Plant(String species, int lifespan, double growthRate, double sellPrice) {
         this.species = species;
@@ -22,9 +23,16 @@ public class Plant {
         }
     }
 
-    public boolean printStats(Graphics g) {
+    public void setWatered(boolean watered) {
+        this.watered = watered;
+    }
+
+    public String printStats(Graphics g) {
         if (soil) {
-            return false;
+            return "soil";
+        }
+        if (this instanceof Rock) {
+            return "rock";
         }
         int x = 1000;
         int y = 200;
@@ -35,7 +43,8 @@ public class Plant {
         g.drawString("Lifespan: " + lifespan + " days", x, y + 20);
         g.drawString("Age: " + currentAge + " days", x, y + 40);
         g.drawString("Infected: " + infected, x, y + 60);
+        g.drawString("Watered: " + watered, x, y + 80);
         g.setColor(Color.black);
-        return true;
+        return "";
     }
 }
