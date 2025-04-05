@@ -20,7 +20,7 @@ public class Plant {
         this.harvestCount = harvestCount;
         currentAge = 0;
         this.sellPrice = sellPrice;
-        this.infected = true;
+        this.infected = false;
         if (species.equals("soil")) {
             soil = true;
         }

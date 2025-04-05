@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class DisplayPanel extends JPanel implements ActionListener {
-    private Logic logic = new Logic();
     private Calender calender = new Calender();
     private Farm farm = new Farm();
     private BufferedImage[] farmObjects = new BufferedImage[5];
@@ -20,6 +19,8 @@ public class DisplayPanel extends JPanel implements ActionListener {
     private boolean finishMessage;
     private boolean stats;
     private boolean plantPlant;
+    private boolean shop;
+    private boolean inventory;
     private String[] messages = new String[]{"Today you have decided to start your farm!",
             "Your task is to make as much money as you can from farming.",
             "Each plant costs 4 coins to plant",
@@ -85,6 +86,12 @@ public class DisplayPanel extends JPanel implements ActionListener {
         defaultButtons[3].setLocation(700, 20);
         if (displayFarm) {
             placeFarm(g);
+        }
+        if (inventory) {
+            player.printInventory(g);
+        }
+        if (shop) {
+            player.printShop(g);
         }
         if (menu) {
             placeMenuStuff(g);
@@ -187,14 +194,28 @@ public class DisplayPanel extends JPanel implements ActionListener {
             }
             if (casted == defaultButtons[3]) { // Enter Button
                 String enteredText = textField.getText().toLowerCase();
+                if (shop) {
+                    int price = player.shopHasItem(enteredText);
+                    if (player.getCoins() >= price && price != -1) {
+                        player.addItem(enteredText);
+                        player.addCoins(price * -1);
+                        message = "Item bought!";
+                    } else {
+                        message = "Not enough coins / Invalid input!";
+                    }
+                    finishMessage = true;
+                    shop = false;
+                    repaint();
+                    return;
+                }
+                shop = false;
                 if (plantPlant) {
                     if (player.getCoins() >= 4 && farm.processAnswer(enteredText, currentStats[0], currentStats[1])) {
                         player.addCoins(-4);
                         message = "Plant planted!";
                     } else {
-                        message = "Not enough coins!";
+                        message = "Not enough coins / Invalid input!";
                     }
-
                     finishMessage = true;
                     stats = false;
                     plantPlant = false;
@@ -253,6 +274,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 repaint();
             }
             if (casted == menuButtons[0]) { // Farm
+                shop = false;
                 menu = false;
                 menuButtonVisibility(false);
                 stats = false;
@@ -265,11 +287,19 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 repaint();
             }
             if (casted == menuButtons[2]) {
-                message = "Welcome to the shop!";
+                message = "Type the item you want to buy";
+                shop = !shop;
+                menu = false;
+                menuButtonVisibility(false);
+                textField.setVisible(true);
+                defaultButtons[3].setVisible(true);
                 repaint();
             }
             if (casted == menuButtons[3]) {
                 message = "Opening inventory!";
+                inventory = !inventory;
+                menu = false;
+                menuButtonVisibility(false);
                 repaint();
             }
         }

@@ -44,6 +44,7 @@ public class Farm {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 Plant plant = grid[i][j];
+                int random = (int) (Math.random() * 15);
                 plant.calculateHarvestTime();
                 if (!plant.getSpecies().equals("soil") && !plant.getSpecies().equals("rock")) {
                     if (plant.getCurrentAge() >= plant.getLifespan()) {
@@ -57,6 +58,15 @@ public class Farm {
                         grid[i][j] = new Plant("soil", -1, -1, -1);
                     } else {
                         plant.setWilted(true);
+                    }
+                    if (random == 1) {
+                        plant.setInfected(true);
+                    }
+                    if (plant.isInfected()) {
+                        random = (int) (Math.random() * 100);
+                        if (random == 1) {
+                            grid[i][j] = new Plant("soil", -1, -1, -1);
+                        }
                     }
                 }
             }
@@ -78,7 +88,7 @@ public class Farm {
         g.drawString("Potato", x, y + 160);
         g.drawString("- Lifespan: 40 days", x, y + 180);
         g.drawString("- 1 per potatoes days", x, y + 200);
-        g.drawString("2 potatoes per harvest", x, y + 220);
+        g.drawString("- 2 potatoes per harvest", x, y + 220);
         g.setColor(Color.black);
     }
 }
