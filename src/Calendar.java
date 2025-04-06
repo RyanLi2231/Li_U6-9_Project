@@ -1,20 +1,14 @@
-import javax.swing.*;
-
-public class Calender {
+public class Calendar {
     private int day;
     private int[] calDay; // Month / Day / Season
     private final String[] MONTHS = {"January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"};
     private final String[] SEASONS = {"Winter", "Spring", "Summer", "Autumn"};
 
-    public Calender() {
+    public Calendar() {
         day = 0;
         calDay = new int[3];
         randomCalDay();
-    }
-
-    public int[] getCalDay() {
-        return calDay;
     }
 
     public String printDay() {

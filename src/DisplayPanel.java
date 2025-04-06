@@ -6,12 +6,10 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class DisplayPanel extends JPanel implements ActionListener {
-    private Calender calender = new Calender();
+    private Calendar calendar = new Calendar();
     private Farm farm = new Farm();
     private BufferedImage[] farmObjects = new BufferedImage[5];
     private boolean displayFarm;
@@ -28,9 +26,9 @@ public class DisplayPanel extends JPanel implements ActionListener {
             "Water your plants everyday",
             "Good luck!"};
     private String message = messages[0];
-    private JButton[] defaultButtons = new JButton[5];
-    private JButton[] menuButtons = new JButton[5];
-    private BufferedImage[] menuItems = new BufferedImage[5];
+    private JButton[] defaultButtons = new JButton[4];
+    private JButton[] menuButtons = new JButton[4];
+    private BufferedImage[] menuItems = new BufferedImage[4];
     private JTextField textField;
     private Rectangle messageBox;
     private int[] messageBoxLocation;
@@ -79,7 +77,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
         g2d.draw(messageBox);
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.setColor(Color.BLACK);
-        g.drawString(calender.printDay(), 800, 20);
+        g.drawString(calendar.printDay(), 800, 20);
         defaultButtons[0].setLocation(1100, 50);
         defaultButtons[1].setLocation(messageBoxLocation[0] + 420, messageBoxLocation[1] + 70);
         defaultButtons[2].setLocation(1080, 80);
@@ -188,7 +186,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
                 repaint();
             }
             if (casted == defaultButtons[2]) {
-                calender.adjustDay();
+                calendar.adjustDay();
                 farm.nextDay();
                 repaint();
             }
@@ -320,7 +318,6 @@ public class DisplayPanel extends JPanel implements ActionListener {
             menuItems[1] = ImageIO.read(new File("src\\forest.jpg"));
             menuItems[2] = ImageIO.read(new File("src\\shop.png"));
             menuItems[3] = ImageIO.read(new File("src\\inventory.png"));
-            menuItems[4] = ImageIO.read(new File("src\\quit.png"));
             add(menuButtons[0]);
             add(menuButtons[1]);
             add(menuButtons[2]);

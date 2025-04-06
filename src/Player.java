@@ -15,10 +15,6 @@ public class Player {
         return coins;
     }
 
-    public String[][] getInventory() {
-        return inventory;
-    }
-
     public void addCoins(double coins) {
         this.coins += coins;
     }
